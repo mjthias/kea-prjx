@@ -7,7 +7,6 @@ export async function generateMetadata() {
   };
 }
 
-//
 export default async function Henry() {
   const res = await fetch("https://nice-dogs.vercel.app/api/dogs?slug=henry");
   const data = await res.json();
