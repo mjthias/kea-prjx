@@ -1,7 +1,18 @@
 // app/dogs/[slug]/page.jsx
 
-import { notFound } from "next/navigation"; // DEN HER
+import { notFound } from "next/navigation";
 import Image from "next/image";
+
+export async function generateStaticParams() {
+  const res = await fetch("https://nice-dogs.vercel.app/api/dogs");
+  const pages = await res.json();
+
+  const paths = pages.map((page) => {
+    return { slug: page.slug };
+  });
+
+  return paths;
+}
 
 export async function generateMetadata() {
   const res = await fetch("https://nice-dogs.vercel.app/api/dogs?slug=henry");
@@ -16,7 +27,7 @@ export default async function Dog({ params }) {
   const { slug } = params;
   const res = await fetch(`https://nice-dogs.vercel.app/api/dogs?slug=${slug}`);
 
-  if (res.status != 200) return notFound(); // DEN HER
+  if (res.status != 200) return notFound();
 
   const data = await res.json();
   const { name, favouriteColor, age, image } = data;
@@ -31,6 +42,9 @@ export default async function Dog({ params }) {
         priority
         sizes="(max-width: 500px) 100vw, 500px"
       />
+      <p>Age: {age}</p>
+      {favouriteColor && <p>Color: {favouriteColor}</p>}
+      <p>Color: {favouriteColor ? favouriteColor : "Hot pink"}</p>
     </main>
   );
 }
